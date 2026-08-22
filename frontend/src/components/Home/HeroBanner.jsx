@@ -1,171 +1,175 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 
-const SLIDES = [
+const slides = [
   {
-    title: "Interstellar",
+    title: "DUNE: PART TWO",
+    description:
+      "Paul Atreides unites with Chani and the Fremen while seeking revenge against the conspirators who destroyed his family.",
+    genre: "Sci-Fi / Action",
+    year: "2024",
+    duration: "2h 46m",
+    poster:
+      "https://image.tmdb.org/t/p/w500/1pdfLvkbY9ohJlCjQH2CZjjYVvJ.jpg",
+    backdrop:
+      "https://image.tmdb.org/t/p/original/1pdfLvkbY9ohJlCjQH2CZjjYVvJ.jpg",
+  },
+  {
+    title: "INTERSTELLAR",
+    description:
+      "A team of explorers travel through a wormhole in space in an attempt to ensure humanity's survival.",
+    genre: "Sci-Fi / Drama",
     year: "2014",
-    genre: "Sci-Fi · Drama",
     duration: "2h 49m",
-    rating: "8.7",
-    desc: "A team of explorers travel through a wormhole in space in an attempt to ensure humanity's survival.",
-    tag: "⭐ Top Recommended",
-    bg: "from-slate-950 via-indigo-950 to-slate-950",
-    glow1: "bg-cyan-500/10",
-    glow2: "bg-indigo-500/10",
+    poster:
+      "https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg",
+    backdrop:
+      "https://image.tmdb.org/t/p/original/rAiYTfKGqDCRIIqo664sY9XZIvQ.jpg",
   },
   {
-    title: "Inception",
-    year: "2010",
-    genre: "Sci-Fi · Thriller",
-    duration: "2h 28m",
-    rating: "8.8",
-    desc: "A thief who steals corporate secrets through the use of dream-sharing technology is given the inverse task of planting an idea.",
-    tag: "🔥 Trending Now",
-    bg: "from-slate-950 via-purple-950 to-slate-950",
-    glow1: "bg-purple-500/10",
-    glow2: "bg-blue-500/10",
-  },
-  {
-    title: "The Dark Knight",
-    year: "2008",
-    genre: "Action · Crime",
-    duration: "2h 32m",
-    rating: "9.0",
-    desc: "When the menace known as the Joker wreaks havoc on Gotham City, Batman must accept one of the greatest psychological tests.",
-    tag: "🏆 All Time Best",
-    bg: "from-slate-950 via-zinc-900 to-slate-950",
-    glow1: "bg-yellow-500/10",
-    glow2: "bg-orange-500/10",
-  },
-  {
-    title: "Dune",
-    year: "2021",
-    genre: "Sci-Fi · Adventure",
-    duration: "2h 35m",
-    rating: "8.0",
-    desc: "A noble family becomes embroiled in a war for control over the galaxy's most valuable asset while its heir becomes troubled by visions.",
-    tag: "🌟 Epic Adventure",
-    bg: "from-slate-950 via-amber-950 to-slate-950",
-    glow1: "bg-amber-500/10",
-    glow2: "bg-orange-500/10",
-  },
-  {
-    title: "Oppenheimer",
-    year: "2023",
-    genre: "Drama · History",
-    duration: "3h 0m",
-    rating: "8.5",
-    desc: "The story of J. Robert Oppenheimer's role in the development of the atomic bomb during World War II.",
-    tag: "🎬 Award Winner",
-    bg: "from-slate-950 via-red-950 to-slate-950",
-    glow1: "bg-red-500/10",
-    glow2: "bg-rose-500/10",
+    title: "AVENGERS: ENDGAME",
+    description:
+      "After the devastating events of Infinity War, the Avengers assemble once more to reverse Thanos' actions.",
+    genre: "Action / Adventure",
+    year: "2019",
+    duration: "3h 1m",
+    poster:
+      "https://image.tmdb.org/t/p/w500/or06FN3Dka5tukK1e9sl16pB3iy.jpg",
+    backdrop:
+      "https://image.tmdb.org/t/p/original/7RyHsO4yDXtBv1zUU3mTpHeQ0d5.jpg",
   },
 ];
 
 function HeroBanner() {
-  const [current, setCurrent] = useState(0);
-  const [animating, setAnimating] = useState(false);
+  const [activeSlide, setActiveSlide] = useState(0);
 
-  // Auto-slide every 4 seconds
+  const movie = slides[activeSlide];
+
+  // Automatic slider
   useEffect(() => {
     const timer = setInterval(() => {
-      goTo((current + 1) % SLIDES.length);
-    }, 4000);
+      setActiveSlide((prev) => (prev + 1) % slides.length);
+    }, 5000);
+
     return () => clearInterval(timer);
-  }, [current]);
+  }, []);
 
-  function goTo(index) {
-    if (animating || index === current) return;
-    setAnimating(true);
-    setTimeout(() => {
-      setCurrent(index);
-      setAnimating(false);
-    }, 300);
-  }
+  const nextSlide = () => {
+    setActiveSlide((prev) => (prev + 1) % slides.length);
+  };
 
-  const slide = SLIDES[current];
+  const previousSlide = () => {
+    setActiveSlide((prev) => (prev - 1 + slides.length) % slides.length);
+  };
 
   return (
-    <section className={`relative w-full min-h-[560px] bg-gradient-to-br ${slide.bg} flex items-center overflow-hidden transition-all duration-700`}>
+    <section className="px-4 md:px-6 lg:px-8 pt-5">
+      <div className="relative min-h-[430px] overflow-hidden rounded-3xl border border-slate-800 bg-slate-900">
 
-      {/* Glow blobs */}
-      <div className={`absolute top-0 left-1/4 w-96 h-96 ${slide.glow1} rounded-full blur-3xl pointer-events-none transition-all duration-700`} />
-      <div className={`absolute bottom-0 right-1/4 w-80 h-80 ${slide.glow2} rounded-full blur-3xl pointer-events-none transition-all duration-700`} />
-
-      {/* Slide Content */}
-      <div
-        className={`relative z-10 w-full px-6 py-16 flex flex-col items-center text-center transition-all duration-300 ${
-          animating ? "opacity-0 translate-y-4" : "opacity-100 translate-y-0"
-        }`}
-      >
-        {/* Tag */}
-        <div className="inline-flex items-center gap-2 bg-cyan-400/10 border border-cyan-400/30 text-cyan-400 text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-6">
-          {slide.tag}
-        </div>
-
-        {/* Title */}
-        <h1 className="text-6xl md:text-7xl font-black text-white leading-tight max-w-3xl">
-          {slide.title}
-        </h1>
-
-        {/* Meta */}
-        <div className="flex items-center justify-center gap-3 mt-4 text-slate-400 text-sm flex-wrap">
-          <span>{slide.year}</span>
-          <span className="w-1 h-1 rounded-full bg-slate-600" />
-          <span>{slide.genre}</span>
-          <span className="w-1 h-1 rounded-full bg-slate-600" />
-          <span>{slide.duration}</span>
-          <span className="w-1 h-1 rounded-full bg-slate-600" />
-          <span className="text-yellow-400 font-semibold">★ {slide.rating}</span>
-        </div>
-
-        {/* Description */}
-        <p className="mt-5 text-slate-400 text-base leading-relaxed max-w-2xl">
-          {slide.desc}
-        </p>
-
-        {/* Buttons */}
-        <div className="flex items-center justify-center gap-4 mt-8">
-          <button className="bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-bold px-7 py-3 rounded-lg text-sm transition-all duration-200 hover:scale-105">
-            ▶ Watch Now
-          </button>
-          <button className="border border-slate-600 hover:border-cyan-400 text-white hover:text-cyan-400 font-semibold px-7 py-3 rounded-lg text-sm transition-all duration-200">
-            + Watchlist
-          </button>
-        </div>
-
-      </div>
-
-      {/* Dots — centered at bottom */}
-      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2">
-        {SLIDES.map((_, i) => (
-          <button
-            key={i}
-            onClick={() => goTo(i)}
-            className={`rounded-full transition-all duration-300 ${
-              i === current
-                ? "w-8 h-2.5 bg-cyan-400"
-                : "w-2.5 h-2.5 bg-slate-600 hover:bg-slate-400"
-            }`}
+        {/* Background */}
+        <div className="absolute inset-0">
+          <img
+            src={movie.backdrop}
+            alt={movie.title}
+            className="h-full w-full object-cover opacity-40"
           />
-        ))}
+
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/90 to-slate-950/20" />
+
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent" />
+        </div>
+
+        {/* Content */}
+        <div className="relative z-10 flex min-h-[430px] items-center p-6 md:p-10 lg:p-12">
+
+          <div className="flex w-full flex-col gap-8 md:flex-row md:items-center">
+
+            {/* Poster */}
+            <div className="hidden shrink-0 md:block">
+              <img
+                src={movie.poster}
+                alt={movie.title}
+                className="h-[300px] w-[200px] rounded-2xl object-cover shadow-2xl"
+              />
+            </div>
+
+            {/* Movie Information */}
+            <div className="max-w-2xl">
+
+              <p className="mb-3 text-sm font-semibold uppercase tracking-[0.25em] text-cyan-400">
+                Featured Movie
+              </p>
+
+              <h1 className="text-4xl font-black tracking-tight text-white md:text-5xl lg:text-6xl">
+                {movie.title}
+              </h1>
+
+              <p className="mt-5 max-w-xl text-sm leading-7 text-slate-300 md:text-base">
+                {movie.description}
+              </p>
+
+              {/* Movie details */}
+              <div className="mt-5 flex flex-wrap items-center gap-3 text-sm text-slate-300">
+                <span>{movie.genre}</span>
+                <span className="text-slate-600">•</span>
+                <span>{movie.year}</span>
+                <span className="text-slate-600">•</span>
+                <span>{movie.duration}</span>
+              </div>
+
+              {/* Buttons */}
+              <div className="mt-7 flex flex-wrap gap-3">
+
+                <button
+                  className="rounded-full bg-cyan-400 px-6 py-3 font-bold text-slate-950 transition hover:bg-cyan-300"
+                  onClick={() => alert(`Playing trailer: ${movie.title}`)}
+                >
+                  ▶ Play Trailer
+                </button>
+
+                <button
+                  className="rounded-full border border-slate-500 bg-slate-900/70 px-6 py-3 font-semibold text-white transition hover:border-cyan-400 hover:text-cyan-400"
+                  onClick={() => alert(`${movie.title} added to your list`)}
+                >
+                  ＋ Add to List
+                </button>
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Previous button */}
+        <button
+          onClick={previousSlide}
+          className="absolute left-4 top-1/2 z-20 hidden -translate-y-1/2 rounded-full border border-white/20 bg-black/40 px-4 py-3 text-xl text-white backdrop-blur transition hover:bg-cyan-400 hover:text-slate-950 md:block"
+        >
+          ‹
+        </button>
+
+        {/* Next button */}
+        <button
+          onClick={nextSlide}
+          className="absolute right-4 top-1/2 z-20 hidden -translate-y-1/2 rounded-full border border-white/20 bg-black/40 px-4 py-3 text-xl text-white backdrop-blur transition hover:bg-cyan-400 hover:text-slate-950 md:block"
+        >
+          ›
+        </button>
+
+        {/* Slider indicators */}
+        <div className="absolute bottom-5 left-1/2 z-20 flex -translate-x-1/2 gap-2">
+          {slides.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => setActiveSlide(index)}
+              className={`h-1.5 rounded-full transition-all ${
+                index === activeSlide
+                  ? "w-8 bg-cyan-400"
+                  : "w-3 bg-slate-600"
+              }`}
+            />
+          ))}
+        </div>
+
       </div>
-
-      {/* Prev / Next Arrows — vertically centered */}
-      <button
-        onClick={() => goTo((current - 1 + SLIDES.length) % SLIDES.length)}
-        className="absolute left-5 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-full bg-slate-800/70 border border-slate-700 text-white hover:bg-cyan-400 hover:text-slate-950 hover:border-cyan-400 transition-all duration-200 flex items-center justify-center text-2xl font-light"
-      >
-        ‹
-      </button>
-      <button
-        onClick={() => goTo((current + 1) % SLIDES.length)}
-        className="absolute right-5 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-full bg-slate-800/70 border border-slate-700 text-white hover:bg-cyan-400 hover:text-slate-950 hover:border-cyan-400 transition-all duration-200 flex items-center justify-center text-2xl font-light"
-      >
-        ›
-      </button>
-
     </section>
   );
 }

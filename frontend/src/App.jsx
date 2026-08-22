@@ -1,28 +1,24 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import MainLayout from "./layout/MainLayout";
-import { ROUTES } from "./routes/AppRoutes";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 import Home from "./pages/Home/Home";
-import MovieDetails from "./pages/MovieDetails/MovieDetails";
 import Profile from "./pages/Profile/Profile";
-import Register from "./pages/Register/Register";
-import Search from "./pages/Search/Search";
-import Watchlist from "./pages/Watchlist/Watchlist";
 
 function App() {
   return (
-    <Router>
+    <BrowserRouter>
       <Routes>
-        <Route element={<MainLayout />}>
-          <Route path={ROUTES.HOME} element={<Home />} />
-          <Route path={ROUTES.MOVIE_DETAILS()} element={<MovieDetails />} />
-          <Route path={ROUTES.PROFILE} element={<Profile />} />
-          <Route path={ROUTES.REGISTER} element={<Register />} />
-          <Route path={ROUTES.SEARCH} element={<Search />} />
-          <Route path={ROUTES.WATCHLIST} element={<Watchlist />} />
-        </Route>
+
+        {/* Home */}
+        <Route path="/" element={<Home />} />
+
+        {/* Profile */}
+        <Route path="/profile" element={<Profile />} />
+
+        {/* Fallback */}
+        <Route path="*" element={<Navigate to="/" replace />} />
+
       </Routes>
-    </Router>
+    </BrowserRouter>
   );
 }
 
