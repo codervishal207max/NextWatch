@@ -1,12 +1,15 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 
+import MainLayout from "./layout/MainLayout";
 import Home from "./pages/Home/Home";
 import Profile from "./pages/Profile/Profile";
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
+    <Routes>
+
+      {/* Main application layout */}
+      <Route element={<MainLayout />}>
 
         {/* Home */}
         <Route path="/" element={<Home />} />
@@ -14,11 +17,12 @@ function App() {
         {/* Profile */}
         <Route path="/profile" element={<Profile />} />
 
-        {/* Fallback */}
-        <Route path="*" element={<Navigate to="/" replace />} />
+      </Route>
 
-      </Routes>
-    </BrowserRouter>
+      {/* Fallback */}
+      <Route path="*" element={<Navigate to="/" replace />} />
+
+    </Routes>
   );
 }
 

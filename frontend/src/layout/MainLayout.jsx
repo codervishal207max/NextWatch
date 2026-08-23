@@ -1,23 +1,25 @@
 import { Outlet } from "react-router-dom";
 import Navbar from "./Navbar";
 import Sidebar from "./Sidebar";
-import Footer from "./Footer";
 
 function MainLayout() {
   return (
-    <div className="flex min-h-screen bg-[var(--color-bg)] text-[var(--color-text)]">
-      {/* Sidebar - fixed left */}
+    <div className="min-h-screen bg-[#0b0f17] text-white">
+      
+      {/* Left Sidebar */}
       <Sidebar />
 
-      {/* Main content area */}
-      <div className="flex-1 flex flex-col ml-20">
+      {/* Main Area */}
+      <div className="ml-[100px] min-h-screen">
+        
+        {/* Top Navbar */}
         <Navbar />
 
-        <main className="flex-1 px-8 py-6">
+        {/* Page Content */}
+        <main className="px-5 pb-10">
           <Outlet />
         </main>
 
-        <Footer />
       </div>
     </div>
   );
