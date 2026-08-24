@@ -1,203 +1,362 @@
 import { useState, useRef, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { FaSearch, FaHeart, FaBell, FaUser, FaTimes, FaClock, FaFire } from "react-icons/fa";
+import {
+  FaSearch,
+  FaHeart,
+  FaBell,
+  FaUser,
+  FaTimes,
+  FaClock,
+  FaFire,
+} from "react-icons/fa";
 
 const ALL_MOVIES = [
-  { title: "Inception", year: "2010", rating: "8.8", genres: ["Sci-Fi", "Thriller"] },
-  { title: "Interstellar", year: "2014", rating: "8.7", genres: ["Sci-Fi", "Drama"] },
-  { title: "The Dark Knight", year: "2008", rating: "9.0", genres: ["Action", "Crime"] },
-  { title: "Parasite", year: "2019", rating: "8.6", genres: ["Drama", "Thriller"] },
-  { title: "Oppenheimer", year: "2023", rating: "8.5", genres: ["Drama", "History"] },
-  { title: "Dune", year: "2021", rating: "8.0", genres: ["Sci-Fi", "Adventure"] },
-  { title: "The Matrix", year: "1999", rating: "8.7", genres: ["Sci-Fi", "Action"] },
-  { title: "John Wick", year: "2014", rating: "7.4", genres: ["Action", "Thriller"] },
-  { title: "The Hangover", year: "2009", rating: "7.7", genres: ["Comedy"] },
-  { title: "Spirited Away", year: "2001", rating: "8.6", genres: ["Animation"] },
-  { title: "Get Out", year: "2017", rating: "7.7", genres: ["Horror", "Thriller"] },
-  { title: "La La Land", year: "2016", rating: "8.0", genres: ["Romance", "Drama"] },
+  {
+    title: "Inception",
+    year: "2010",
+    rating: "8.8",
+    genres: ["Sci-Fi", "Thriller"],
+  },
+  {
+    title: "Interstellar",
+    year: "2014",
+    rating: "8.7",
+    genres: ["Sci-Fi", "Drama"],
+  },
+  {
+    title: "The Dark Knight",
+    year: "2008",
+    rating: "9.0",
+    genres: ["Action", "Crime"],
+  },
+  {
+    title: "Parasite",
+    year: "2019",
+    rating: "8.6",
+    genres: ["Drama", "Thriller"],
+  },
+  {
+    title: "Oppenheimer",
+    year: "2023",
+    rating: "8.5",
+    genres: ["Drama", "History"],
+  },
+  {
+    title: "Dune",
+    year: "2021",
+    rating: "8.0",
+    genres: ["Sci-Fi", "Adventure"],
+  },
+  {
+    title: "The Matrix",
+    year: "1999",
+    rating: "8.7",
+    genres: ["Sci-Fi", "Action"],
+  },
+  {
+    title: "John Wick",
+    year: "2014",
+    rating: "7.4",
+    genres: ["Action", "Thriller"],
+  },
+  {
+    title: "The Hangover",
+    year: "2009",
+    rating: "7.7",
+    genres: ["Comedy"],
+  },
+  {
+    title: "Spirited Away",
+    year: "2001",
+    rating: "8.6",
+    genres: ["Animation"],
+  },
+  {
+    title: "Get Out",
+    year: "2017",
+    rating: "7.7",
+    genres: ["Horror", "Thriller"],
+  },
+  {
+    title: "La La Land",
+    year: "2016",
+    rating: "8.0",
+    genres: ["Romance", "Drama"],
+  },
 ];
 
-const TRENDING_SEARCHES = ["Interstellar", "Inception", "Dune", "Parasite"];
+const TRENDING_SEARCHES = [
+  "Interstellar",
+  "Inception",
+  "Dune",
+  "Parasite",
+];
+
+const NOTIFICATIONS = [
+  {
+    icon: "🎬",
+    text: "Inception is trending today!",
+    time: "2m ago",
+  },
+  {
+    icon: "⭐",
+    text: "New top rated: Oppenheimer",
+    time: "1h ago",
+  },
+  {
+    icon: "🤖",
+    text: "New recommendation ready for you",
+    time: "3h ago",
+  },
+  {
+    icon: "🔥",
+    text: "Dune: Part Two added to catalog",
+    time: "1d ago",
+  },
+];
 
 function Navbar() {
   const { pathname } = useLocation();
-  const [showNotif, setShowNotif] = useState(false);
+
   const [query, setQuery] = useState("");
   const [focused, setFocused] = useState(false);
+  const [showNotif, setShowNotif] = useState(false);
+
   const searchRef = useRef(null);
 
-  const NOTIFICATIONS = [
-    { icon: "🎬", text: "Inception is trending today!", time: "2m ago" },
-    { icon: "⭐", text: "New top rated: Oppenheimer", time: "1h ago" },
-    { icon: "🤖", text: "New recommendation ready for you", time: "3h ago" },
-    { icon: "🔥", text: "Dune: Part Two added to catalog", time: "1d ago" },
-  ];
+  const results =
+    query.trim().length > 0
+      ? ALL_MOVIES.filter(
+          (movie) =>
+            movie.title
+              .toLowerCase()
+              .includes(query.toLowerCase()) ||
+            movie.genres.some((genre) =>
+              genre.toLowerCase().includes(query.toLowerCase())
+            )
+        ).slice(0, 6)
+      : [];
 
-  // filtered results
-  const results = query.trim().length > 0
-    ? ALL_MOVIES.filter((m) =>
-        m.title.toLowerCase().includes(query.toLowerCase()) ||
-        m.genres.some((g) => g.toLowerCase().includes(query.toLowerCase()))
-      ).slice(0, 6)
-    : [];
-
-  // close dropdown on outside click
   useEffect(() => {
-    function handleClick(e) {
-      if (searchRef.current && !searchRef.current.contains(e.target)) {
+    const handleClick = (event) => {
+      if (
+        searchRef.current &&
+        !searchRef.current.contains(event.target)
+      ) {
         setFocused(false);
       }
-    }
+    };
+
     document.addEventListener("mousedown", handleClick);
-    return () => document.removeEventListener("mousedown", handleClick);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClick);
+    };
   }, []);
 
-  const showDropdown = focused;
-
   return (
-    <nav className="sticky top-0 z-50 bg-slate-950/95 backdrop-blur-md border-b border-slate-800">
-      <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between gap-6">
+    <nav className="sticky top-0 z-40 h-16 border-b border-slate-800 bg-[#0b0f17]/95 backdrop-blur-xl">
+      <div className="h-full px-6 flex items-center justify-between gap-6">
 
-        {/* Logo */}
-        <Link to="/" className="flex items-center gap-1.5 group shrink-0">
-          {/* Play icon in cyan gradient circle */}
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-400 to-cyan-600 flex items-center justify-center shadow-lg shadow-cyan-500/30 group-hover:shadow-cyan-400/50 transition-all duration-300 group-hover:scale-110">
-            <svg viewBox="0 0 24 24" fill="white" className="w-4 h-4 ml-0.5">
-              <path d="M8 5v14l11-7z" />
-            </svg>
-          </div>
-          {/* Text with gradient */}
-          <span className="text-2xl font-black tracking-tight bg-gradient-to-r from-white via-cyan-200 to-cyan-400 bg-clip-text text-transparent">
-            Next<span className="text-cyan-400">Watch</span>
-          </span>
-        </Link>
+        {/* Search */}
+        <div
+          ref={searchRef}
+          className="relative w-full max-w-xl"
+        >
+          <div
+            className={`flex items-center rounded-xl border px-4 py-2.5 transition-all ${
+              focused
+                ? "border-cyan-500/60 bg-slate-900 ring-1 ring-cyan-500/20"
+                : "border-slate-800 bg-slate-900/80 hover:border-slate-700"
+            }`}
+          >
+            <FaSearch
+              size={14}
+              className={`mr-3 ${
+                focused ? "text-cyan-400" : "text-slate-500"
+              }`}
+            />
 
-        {/* Search Bar */}
-        <div ref={searchRef} className="relative hidden md:block w-full max-w-sm">
-          <div className={`flex items-center bg-slate-900 border rounded-lg px-3 py-2 transition-all duration-200
-            ${focused ? "border-cyan-500/60 ring-1 ring-cyan-500/20" : "border-slate-700/60 hover:border-slate-600"}`}>
-            <FaSearch className={`mr-2.5 shrink-0 transition-colors duration-200 ${focused ? "text-cyan-400" : "text-slate-600"}`} size={13} />
             <input
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               onFocus={() => setFocused(true)}
               placeholder="Search movies..."
-              className="bg-transparent outline-none text-white w-full placeholder:text-slate-600 text-sm"
+              className="w-full bg-transparent text-sm text-white outline-none placeholder:text-slate-600"
             />
+
             {query && (
-              <button onClick={() => setQuery("")} className="ml-2 text-slate-600 hover:text-slate-300 transition-colors shrink-0">
-                <FaTimes size={11} />
+              <button
+                onClick={() => setQuery("")}
+                className="text-slate-500 hover:text-white"
+              >
+                <FaTimes size={12} />
               </button>
             )}
           </div>
 
-          {/* Dropdown */}
-          {showDropdown && (
-            <div className="absolute top-12 left-0 right-0 bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl shadow-black/60 z-50 overflow-hidden">
+          {/* Search Dropdown */}
+          {focused && (
+            <div className="absolute left-0 right-0 top-14 z-50 overflow-hidden rounded-2xl border border-slate-700 bg-slate-900 shadow-2xl">
 
-              {/* Live Results */}
               {results.length > 0 ? (
-                <div>
-                  <div className="px-4 pt-3 pb-1 text-xs text-slate-500 font-semibold uppercase tracking-wider">
+                <>
+                  <div className="px-4 pt-3 pb-2 text-xs font-semibold uppercase text-slate-500">
                     Results
                   </div>
-                  {results.map((movie, i) => (
+
+                  {results.map((movie) => (
                     <div
-                      key={i}
-                      onClick={() => { setQuery(movie.title); setFocused(false); }}
-                      className="flex items-center gap-3 px-4 py-2.5 hover:bg-slate-800 cursor-pointer transition-colors"
+                      key={movie.title}
+                      onClick={() => {
+                        setQuery(movie.title);
+                        setFocused(false);
+                      }}
+                      className="flex cursor-pointer items-center gap-3 px-4 py-3 hover:bg-slate-800"
                     >
-                      <div className="w-8 h-8 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center text-base shrink-0">
+                      <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-slate-800">
                         🎬
                       </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-white text-sm font-medium truncate">{movie.title}</p>
-                        <p className="text-slate-500 text-xs">{movie.year} · {movie.genres[0]}</p>
+
+                      <div className="min-w-0 flex-1">
+                        <p className="truncate text-sm font-medium text-white">
+                          {movie.title}
+                        </p>
+
+                        <p className="text-xs text-slate-500">
+                          {movie.year} · {movie.genres[0]}
+                        </p>
                       </div>
-                      <span className="text-yellow-400 text-xs font-semibold shrink-0">★ {movie.rating}</span>
+
+                      <span className="text-xs font-semibold text-yellow-400">
+                        ★ {movie.rating}
+                      </span>
                     </div>
                   ))}
-                </div>
-              ) : query.trim().length > 0 ? (
-                /* No Results */
+                </>
+              ) : query.trim() ? (
                 <div className="px-4 py-8 text-center">
-                  <p className="text-slate-400 text-sm">No results for "<span className="text-white">{query}</span>"</p>
-                  <p className="text-slate-600 text-xs mt-1">Try a different keyword</p>
+                  <p className="text-sm text-slate-400">
+                    No results for{" "}
+                    <span className="text-white">
+                      "{query}"
+                    </span>
+                  </p>
+
+                  <p className="mt-1 text-xs text-slate-600">
+                    Try a different keyword
+                  </p>
                 </div>
               ) : (
-                /* Default: Trending */
-                <div>
-                  <div className="px-4 pt-3 pb-1 text-xs text-slate-500 font-semibold uppercase tracking-wider flex items-center gap-1.5">
-                    <FaFire className="text-orange-400" size={10} /> Trending Searches
+                <>
+                  <div className="flex items-center gap-2 px-4 pt-3 pb-2 text-xs font-semibold uppercase text-slate-500">
+                    <FaFire
+                      size={11}
+                      className="text-orange-400"
+                    />
+                    Trending Searches
                   </div>
-                  {TRENDING_SEARCHES.map((t, i) => (
+
+                  {TRENDING_SEARCHES.map((item) => (
                     <div
-                      key={i}
-                      onClick={() => { setQuery(t); }}
-                      className="flex items-center gap-3 px-4 py-2.5 hover:bg-slate-800 cursor-pointer transition-colors"
+                      key={item}
+                      onClick={() => setQuery(item)}
+                      className="flex cursor-pointer items-center gap-3 px-4 py-3 hover:bg-slate-800"
                     >
-                      <FaClock className="text-slate-600 shrink-0" size={12} />
-                      <span className="text-slate-300 text-sm">{t}</span>
+                      <FaClock
+                        size={12}
+                        className="text-slate-600"
+                      />
+
+                      <span className="text-sm text-slate-300">
+                        {item}
+                      </span>
                     </div>
                   ))}
-                </div>
+                </>
               )}
-
             </div>
           )}
         </div>
 
-        {/* Right Icons */}
-        <div className="flex items-center gap-2 shrink-0">
+        {/* Right Side */}
+        <div className="flex shrink-0 items-center gap-2">
 
-          {/* Watchlist */}
+          {/* My List */}
           <Link
             to="/watchlist"
-            title="Watchlist"
-            className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200
-              ${pathname === "/watchlist"
+            title="My List"
+            className={`flex items-center gap-2 rounded-lg px-3 py-2 transition ${
+              pathname === "/watchlist"
                 ? "bg-cyan-400/15 text-cyan-400"
-                : "text-slate-400 hover:text-cyan-400 hover:bg-slate-800"
-              }`}
+                : "text-slate-400 hover:bg-slate-800 hover:text-cyan-400"
+            }`}
           >
             <FaHeart size={17} />
-            <span className="hidden lg:inline">Watchlist</span>
+
+            <span className="hidden lg:inline text-sm">
+              My List
+            </span>
           </Link>
 
-          {/* Notifications */}
+          {/* Notification */}
           <div className="relative">
             <button
               title="Notifications"
-              onClick={() => setShowNotif((v) => !v)}
-              className={`relative flex items-center px-3 py-2 rounded-lg transition-all duration-200
-                ${showNotif ? "bg-cyan-400/15 text-cyan-400" : "text-slate-400 hover:text-cyan-400 hover:bg-slate-800"}`}
+              onClick={() => setShowNotif((prev) => !prev)}
+              className={`relative rounded-lg px-3 py-2 transition ${
+                showNotif
+                  ? "bg-cyan-400/15 text-cyan-400"
+                  : "text-slate-400 hover:bg-slate-800 hover:text-cyan-400"
+              }`}
             >
               <FaBell size={17} />
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full" />
+
+              <span className="absolute right-1 top-1 h-2 w-2 rounded-full bg-red-500" />
             </button>
 
             {showNotif && (
-              <div className="absolute right-0 top-12 w-80 bg-slate-900 border border-slate-700 rounded-xl shadow-2xl shadow-black/50 z-50 overflow-hidden">
-                <div className="flex items-center justify-between px-4 py-3 border-b border-slate-800">
-                  <span className="text-white font-bold text-sm">Notifications</span>
-                  <button onClick={() => setShowNotif(false)} className="text-slate-500 hover:text-white transition-colors">
+              <div className="absolute right-0 top-12 z-50 w-80 overflow-hidden rounded-xl border border-slate-700 bg-slate-900 shadow-2xl">
+
+                <div className="flex items-center justify-between border-b border-slate-800 px-4 py-3">
+                  <span className="text-sm font-bold text-white">
+                    Notifications
+                  </span>
+
+                  <button
+                    onClick={() => setShowNotif(false)}
+                    className="text-slate-500 hover:text-white"
+                  >
                     <FaTimes size={13} />
                   </button>
                 </div>
+
                 <div className="divide-y divide-slate-800">
-                  {NOTIFICATIONS.map((n, i) => (
-                    <div key={i} className="flex items-start gap-3 px-4 py-3 hover:bg-slate-800/60 transition-colors cursor-pointer">
-                      <span className="text-xl shrink-0 mt-0.5">{n.icon}</span>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-slate-300 text-sm leading-snug">{n.text}</p>
-                        <span className="text-slate-600 text-xs mt-0.5 block">{n.time}</span>
+                  {NOTIFICATIONS.map((notification, index) => (
+                    <div
+                      key={index}
+                      className="flex cursor-pointer items-start gap-3 px-4 py-3 hover:bg-slate-800/60"
+                    >
+                      <span className="text-xl">
+                        {notification.icon}
+                      </span>
+
+                      <div>
+                        <p className="text-sm text-slate-300">
+                          {notification.text}
+                        </p>
+
+                        <span className="text-xs text-slate-600">
+                          {notification.time}
+                        </span>
                       </div>
                     </div>
                   ))}
                 </div>
-                <div className="px-4 py-3 border-t border-slate-800 text-center">
-                  <button className="text-cyan-400 text-xs hover:text-cyan-300 transition-colors">
+
+                <div className="border-t border-slate-800 px-4 py-3 text-center">
+                  <button className="text-xs text-cyan-400 hover:text-cyan-300">
                     Mark all as read
                   </button>
                 </div>
@@ -209,13 +368,13 @@ function Navbar() {
           <Link
             to="/profile"
             title="Profile"
-            className={`flex items-center gap-2 px-2 py-1.5 rounded-lg transition-all duration-200
-              ${pathname === "/profile"
+            className={`rounded-lg p-1.5 transition ${
+              pathname === "/profile"
                 ? "ring-2 ring-cyan-400"
                 : "hover:ring-2 hover:ring-slate-600"
-              }`}
+            }`}
           >
-            <div className="w-8 h-8 rounded-full bg-cyan-500 flex items-center justify-center text-white font-bold text-sm">
+            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-cyan-400 to-blue-500 text-white">
               <FaUser size={13} />
             </div>
           </Link>
