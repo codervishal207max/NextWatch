@@ -10,7 +10,7 @@ function Footer() {
 
           {/* Center — Copyright */}
           <div className="text-slate-600 text-xs text-center">
-            © 2025 NextWatch · Built by{" "}
+            © 2026 NextWatch · Built by{" "}
             <span className="text-slate-400 font-medium">Vishal Fulbandhe</span>
           </div>
 

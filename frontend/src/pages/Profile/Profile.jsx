@@ -1,11 +1,8 @@
-import Navbar from "../../components/layout/Navbar";
 import { FaUser, FaHeart, FaStar, FaFilm } from "react-icons/fa";
 
 function Profile() {
   return (
-    <div className="min-h-screen bg-slate-950 text-white">
-      <Navbar />
-
+    <div className="min-h-full bg-slate-950 text-white">
       <div className="max-w-4xl mx-auto px-6 py-12">
 
         {/* Profile Card */}
