@@ -25,6 +25,7 @@ API.interceptors.response.use(
 );
 
 export const movieAPI = {
+  getAll:           () => API.get("/api/movies/"),
   getTrending:       () => API.get("/api/movies/trending"),
   getTopRated:       () => API.get("/api/movies/top-rated"),
   getByGenre:        (genre) => API.get(`/api/movies/?genre=${genre}`),
