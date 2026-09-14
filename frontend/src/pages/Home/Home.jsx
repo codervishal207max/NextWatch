@@ -31,7 +31,11 @@ function Home() {
           poster: movie.poster_path
             ? movie.poster_path.startsWith("http")
               ? movie.poster_path
-              : `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+              : `https://image.tmdb.org/t/p/w500${
+                movie.poster_path.startWith("/")
+                 ? movie.poster_path
+                 : `/${movie.poster_path}`
+                }`
             : null,
         }));
 
